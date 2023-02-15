@@ -23,5 +23,6 @@ public class AvaliadorCreditoController {
     @GetMapping(value = "sutucao-cliente", params = "cpf")
     public ResponseEntity<SituacaoCliente> consultaSituacaoCliente(@RequestParam("cpf") String cpf){
         SituacaoCliente situacaoCliente = avaliadorCreditoService.obterSituacaoCliente(cpf);
+        return  ResponseEntity.ok(situacaoCliente);
     }
 }
