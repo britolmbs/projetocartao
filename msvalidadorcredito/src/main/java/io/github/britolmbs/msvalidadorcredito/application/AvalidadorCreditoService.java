@@ -3,9 +3,7 @@ package io.github.britolmbs.msvalidadorcredito.application;
 import feign.FeignException;
 import io.github.britolmbs.msvalidadorcredito.application.ex.DadosClienteNotFoundException;
 import io.github.britolmbs.msvalidadorcredito.application.ex.ErroComunicacaoMicroservicesException;
-import io.github.britolmbs.msvalidadorcredito.domain.model.CartaoCliente;
-import io.github.britolmbs.msvalidadorcredito.domain.model.DadosCliente;
-import io.github.britolmbs.msvalidadorcredito.domain.model.SituacaoCliente;
+import io.github.britolmbs.msvalidadorcredito.domain.model.*;
 import io.github.britolmbs.msvalidadorcredito.infra.clients.CartoesResourcesClient;
 import io.github.britolmbs.msvalidadorcredito.infra.clients.ClienteResourceClient;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +36,25 @@ public class AvalidadorCreditoService {
             if (HttpStatus.NOT_FOUND.value() == status) {
                 throw new DadosClienteNotFoundException();
             }throw new ErroComunicacaoMicroservicesException(e.getMessage(), status);
+        }
+    }
+    public RetornoAvaliacaoCliente realizarAvaliacao(String cpf, Long renda) throws DadosClienteNotFoundException, ErroComunicacaoMicroservicesException {
+        try{
+ResponseEntity<DadosCliente> dadosClienteResponse = clienteClient.dadosCliente(cpf);
+ResponseEntity<List<Cartao>> cartoesResponse = cartoesClient.getCartoesRendaAteh(renda);
+
+List<Cartao> cartoes = cartoesResponse.getBody();
+cartoes.stream().map(cartao -> {
+    CartaoAprovado aprovado = new CartaoAprovado();
+    aprovado.setCartao(cartao.getNome());
+    aprovado.setBandeira(cartao.getBandeira());
+    aprovado.setLimiteAprovado();
+})
+            int status = e.status();
+            if (HttpStatus.NOT_FOUND.value() == status){
+                throw new DadosClienteNotFoundException();
+            }
+            throw new ErroComunicacaoMicroservicesException(e.getMessage(), status);
         }
     }
 }
