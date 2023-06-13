@@ -2,9 +2,8 @@ package io.github.britolmbs.msvalidadorcredito.application;
 
 import io.github.britolmbs.msvalidadorcredito.application.ex.DadosClienteNotFoundException;
 import io.github.britolmbs.msvalidadorcredito.application.ex.ErroComunicacaoMicroservicesException;
-import io.github.britolmbs.msvalidadorcredito.domain.model.DadosAvaliacao;
-import io.github.britolmbs.msvalidadorcredito.domain.model.RetornoAvaliacaoCliente;
-import io.github.britolmbs.msvalidadorcredito.domain.model.SituacaoCliente;
+import io.github.britolmbs.msvalidadorcredito.application.ex.ErroSolicitacaoCartaoException;
+import io.github.britolmbs.msvalidadorcredito.domain.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,5 +43,15 @@ try{
 } catch (ErroComunicacaoMicroservicesException e) {
     return ResponseEntity.status(HttpStatus.resolve(e.getStatus())).body(e.getMessage());
 }
+    }
+    @PostMapping("solicitacoes-cartao")
+    public ResponseEntity solicitarCartao(@RequestBody DadosSolicitacaoEmissaoCartao dados){
+        try{
+            ProtocoloSolicitacaoCartao protocoloSolicitacaoCartao = avaliadorCreditoService
+                    .solicitarEmissaoCartao(dados);
+            return ResponseEntity.ok(protocoloSolicitacaoCartao);
+        } catch (ErroSolicitacaoCartaoException e){
+            return  ResponseEntity.internalServerError().body(e.getMessage());
+        }
     }
 }
