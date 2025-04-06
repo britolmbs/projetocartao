@@ -1,4 +1,4 @@
-# Sistema de Cartão de Crédito para Plataforma de Mensageria
+# Sistema de Cartão de Crédito para Plataforma de Mensageria.
 
 Este projeto consiste em um sistema de gestão de cartões de crédito integrado a uma plataforma de mensageria, desenvolvido com Java, Spring Boot, Docker e RemmeBBQT.
 
